@@ -24,16 +24,25 @@ context(
         sourceMaps: !this.isProduction,
         allowSyntheticDefaultImports: true,
         target: 'browser@es5',
+        definedExpressions: {
+          "__isBrowser__": true,
+        },
         plugins: [
           CSSPlugin(),
-          WebIndexPlugin({template: `${SRC_PATH}index.html`}),
-          QuantumPlugin({
-            treeshake: true,
-            uglify: this.isProduction,
-            definedExpressions: {
-              "__isBrowser__": true,
-            },
-          }),
+          // WebIndexPlugin({
+          //   // template: `${SRC_PATH}templates/index.html`,
+          //   // title: 'Is this working?',
+          //   // appendBundles: true,
+          //   // bundles: ['api',BUNDLE],
+          //   path: './'
+          // }),
+          // QuantumPlugin({
+          //   treeshake: true,
+          //   uglify: this.isProduction,
+          //   definedExpressions: {
+          //     "__isBrowser__": true,
+          //   },
+          // }),
         ],
       }
     }
@@ -70,20 +79,17 @@ task('build:config', config(true))
 task('client', context =>  {
   fuse.opts = context.getOptions()
 
-  if(context.isProduction) {
-    fuse
-      .bundle(BUNDLE)
-      .instructions(` > ${ENTRY}`)
-  }
-  else {
-    fuse
-      .bundle(BUNDLE)
-      .instructions(` > ${ENTRY}`)
-      .hmr()
+  const client = fuse.bundle(BUNDLE)
+
+  if(!context.isProduction) {
+    client
       .watch([
         `${SRC_PATH}**`,
       ].join('|'))
+      .hmr()
   }
+  client.instructions(` > ${ENTRY}`)
+  return client
 })
 
 const run = context => {

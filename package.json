@@ -24,6 +24,7 @@
     "isomorphic-fetch": "^2.2.1",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
+    "react-monaco-editor": "^0.20.0",
     "react-router-dom": "^4.3.1"
   }
 }
